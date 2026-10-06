@@ -6,3 +6,10 @@ app/src/_shots/
 *.log
 .DS_Store
 _work/
+__pycache__/
+*.pyc
+app_py/_smoke_out/
+build/
+dist/
+nsis/
+icon.iconset/

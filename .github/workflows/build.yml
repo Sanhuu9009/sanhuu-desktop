@@ -1,13 +1,8 @@
-name: build-sanhuu-pet
+name: build-pyqt
 
 on:
   push:
-    branches: [main]
-    tags: ['v*']
-    paths:
-      - 'app/**'
-      - '.github/workflows/build.yml'
-  workflow_dispatch:
+    tags: ["v*"]
 
 permissions:
   contents: write
@@ -17,51 +12,75 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - os: windows-latest
-            artifact: sanhuu-pet-windows
-          - os: macos-latest
-            artifact: sanhuu-pet-macos
+        os: [windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-python@v5
         with:
-          node-version: 22
+          python-version: "3.12"
 
-      - uses: dtolnay/rust-toolchain@stable
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install PyQt6 Pillow requests pyzipper py7zr imageio imageio-ffmpeg fpdf2 pyinstaller
 
-      - uses: Swatinem/rust-cache@v2
+      # ---------- Windows ----------
+      - name: Build (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          pyinstaller --noconfirm --onefile --windowed --name SanhuuPet `
+            --icon app_py/icon.ico `
+            --add-data "assets/anim;assets/anim" `
+            app_py/app.py
+
+      - name: Make installer (Windows NSIS)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          mkdir -p nsis
+          cp packaging/installer.nsi nsis/installer.nsi
+          sed -i "s/\${VERSION}/$VERSION/g" nsis/installer.nsi
+          choco install nsis --yes --no-progress >/dev/null 2>&1 || true
+          "/c/Program Files (x86)/NSIS/makensis.exe" nsis/installer.nsi
+
+      # ---------- macOS ----------
+      - name: Build (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          pyinstaller --noconfirm --windowed --name "SanhuuPet" \
+            --add-data "assets/anim:assets/anim" \
+            app_py/app.py
+
+      - name: Make dmg (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          mkdir -p icon.iconset
+          python - <<'PY'
+          from PIL import Image
+          im = Image.open("assets/anim/idle/01.png").convert("RGBA").resize((256, 256), Image.Resampling.NEAREST)
+          for s in (16, 32, 64, 128, 256, 512):
+              im.resize((s, s), Image.Resampling.NEAREST).save(f"icon.iconset/icon_{s}x{s}.png")
+              im.resize((s * 2, s * 2), Image.Resampling.NEAREST).save(f"icon.iconset/icon_{s}x{s}@2x.png")
+          PY
+          iconutil -c icns icon.iconset -o icon.icns
+          APP="dist/SanhuuPet.app"
+          cp icon.icns "$APP/Contents/Resources/"
+          plutil -replace CFBundleIconFile -string icon.icns "$APP/Contents/Info.plist"
+          plutil -replace CFBundleName -string "三虎桌宠" "$APP/Contents/Info.plist"
+          plutil -replace CFBundleDisplayName -string "三虎桌宠" "$APP/Contents/Info.plist"
+          VERSION=${GITHUB_REF_NAME#v}
+          mkdir -p dmg
+          cp -R "$APP" dmg/
+          ln -sf /Applications dmg/Applications
+          hdiutil create -volname "SanhuuPet" -srcfolder dmg -ov -format UDZO "Sanhuu.Pet_${VERSION}_aarch64.dmg" -quiet
+
+      # ---------- 发布 ----------
+      - uses: softprops/action-gh-release@v2
         with:
-          workspaces: app/src-tauri
-
-      - name: Install Tauri CLI
-        working-directory: app
-        run: npm install
-
-      - name: Build and upload artifacts
-        uses: tauri-apps/tauri-action@v0
-        with:
-          projectPath: app
-          tagName: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
-          releaseName: Sanhuu Pet ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'dev build' }}
-          releaseDraft: false
-          releaseBody: |
-            ## 三虎桌宠 Sanhuu Pet
-
-            以「三虎 Sanhuu」为主角的像素风桌面宠物。
-
-            - 点击三虎：开心反应 + 工具栏
-            - 截图 / 录屏（全屏或窗口，鼠标移到窗口出现红色选框）
-            - 文件格式转换（图片/文本/视频转 GIF）
-            - ZIP 压缩（可设密码）/ 解压（含 7z / RAR）
-            - 定时提醒、自动关机 / 睡眠 / 重启
-            - 待办清单（像素风 UI）
-            - 天气与下雨主动预警动画
-            - 开机自启、托盘常驻、窗口置顶
-
-            美术素材版权 © 三虎 Sanhuu，保留所有权利。未经许可，禁止商用、二次修改、转载传播。
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            Sanhuu.Pet-*-setup.exe
+            Sanhuu.Pet_*_aarch64.dmg
+          generate_release_notes: true

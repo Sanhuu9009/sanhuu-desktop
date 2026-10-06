@@ -1,0 +1,8 @@
+PyQt6>=6.6
+Pillow
+requests
+pyzipper
+py7zr
+imageio
+imageio-ffmpeg
+fpdf2
