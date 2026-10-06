@@ -140,8 +140,7 @@ pub async fn record_gif(
     let app2 = app.clone();
     let gif = tauri::async_runtime::spawn_blocking(move || -> Result<Vec<u8>, String> {
         let interval = Duration::from_millis(1000 / rate as u64);
-        let mut encoder = None;
-        let mut out = Cursor::new(Vec::new());
+        let mut encoder: Option<image::codecs::gif::GifEncoder<Cursor<Vec<u8>>>> = None;
         let mut last = Instant::now();
         let mut captured = 0usize;
         for i in 0..frames {
@@ -160,25 +159,21 @@ pub async fn record_gif(
             // 降采样到宽 <= 960，控制体积
             let img = downscale(&img, 960);
             let fr = image::Frame::new(img);
-            if encoder.is_none() {
-                let mut e = image::codecs::gif::GifEncoder::new(&mut out);
+            if let Some(e) = encoder.as_mut() {
+                e.encode_frame(fr).map_err(|err| err.to_string())?;
+            } else {
+                let mut e = image::codecs::gif::GifEncoder::new(Cursor::new(Vec::new()));
                 e.set_repeat(image::codecs::gif::Repeat::Finite(0))
                     .map_err(|err| err.to_string())?;
                 e.encode_frame(fr).map_err(|err| err.to_string())?;
                 encoder = Some(e);
-            } else {
-                encoder
-                    .as_mut()
-                    .unwrap()
-                    .encode_frame(fr)
-                    .map_err(|err| err.to_string())?;
             }
             captured = i as usize + 1;
         }
         if captured == 0 {
             return Err("未捕获到任何帧".into());
         }
-        drop(encoder);
+        let out = encoder.expect("gif encoder").into_inner();
         Ok(out.into_inner())
     })
     .await
