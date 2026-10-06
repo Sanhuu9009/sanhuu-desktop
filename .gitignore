@@ -1,11 +1,7 @@
-# 过程产物（不推送）
-_orig/
+node_modules/
+app/src-tauri/target/
+target/
 _shots/
-_preview_*.png
-_wrist_*.png
-_chrome_profile/
+app/src/_shots/
+*.log
 .DS_Store
-
-# 仅保留最终精灵，排除中间版本
-assets/sprite-*.png
-!assets/sprite-*-final.png

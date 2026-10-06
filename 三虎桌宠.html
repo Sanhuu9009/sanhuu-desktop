@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>小白虎桌宠</title>
+<title>三虎桌宠</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%231a1d26'/%3E%3Cpath d='M3 5h3v1h1V4H3zM13 5h-3v1H9V4h4z' fill='%23efe7d6'/%3E%3Cpath d='M2 7h12v6H2z' fill='%23efe7d6'/%3E%3Cpath d='M4 8h2v1H4zM10 8h2v1h-2z' fill='%231a1d26'/%3E%3Cpath d='M4 10h8v1H4z' fill='%231a1d26'/%3E%3Crect x='7' y='5' width='2' height='2' fill='%23e8a33d'/%3E%3C/svg%3E">
 <style>
 :root{
@@ -194,8 +194,8 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 <body>
 <div id="stage">
   <canvas id="pet"></canvas>
-  <div id="chip"><span class="dot"></span><span id="petName">小白虎桌宠</span><span id="netState"></span></div>
-  <div id="hint">点击小白虎打开工具栏 · 双击让它跑起来 · 按住拖拽移动</div>
+  <div id="chip"><span class="dot"></span><span id="petName">三虎桌宠</span><span id="netState"></span></div>
+  <div id="hint">点击三虎打开工具栏 · 双击让它跑起来 · 按住拖拽移动</div>
   <div id="bubble"><span id="bubbleText"></span></div>
   <div id="dock"></div>
 </div>
@@ -214,7 +214,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
 /* ================= 音效 ================= */
 let AC=null;
-const settings={name:'小白虎',size:172,speed:1,sound:true};
+const settings={name:'三虎',size:172,speed:1,sound:true};
 function beep(f,d,type='triangle',g=0.045,when=0){
   if(!settings.sound)return;
   try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();
@@ -854,7 +854,7 @@ ${head('天气')}
     <button class="btn" id="wxLoc">使用定位</button>
     <button class="btn primary" id="wxGo">查询</button>
   </div>
-  <div id="wxBody"><p class="note">输入城市或使用定位查询天气。若未来 3 小时内预计下雨，小白虎会主动提示并表演下雨动画（4 小时内只提醒一次）。</p></div>
+  <div id="wxBody"><p class="note">输入城市或使用定位查询天气。若未来 3 小时内预计下雨，三虎会主动提示并表演下雨动画（4 小时内只提醒一次）。</p></div>
 </div>`;
 async function fetchWeather(geo,auto){
   const wx=$('#wxBody');
@@ -949,7 +949,7 @@ ${head('设置')}
 </div>`;
 function bindSettings(){
   const sv=$('#stSizeV'),spv=$('#stSpeedV');
-  $('#stName').onchange=e=>{settings.name=e.target.value.trim()||'小白虎';$('#petName').textContent=settings.name;saveSettings();bubble('我是'+settings.name+'~')};
+  $('#stName').onchange=e=>{settings.name=e.target.value.trim()||'三虎';$('#petName').textContent=settings.name;saveSettings();bubble('我是'+settings.name+'~')};
   $('#stSize').oninput=e=>{settings.size=+e.target.value;sv.textContent=settings.size;saveSettings()};
   $('#stSpeed').oninput=e=>{settings.speed=+e.target.value;spv.textContent=settings.speed+'×';saveSettings()};
   $('#stSound').onclick=()=>{settings.sound=!settings.sound;saveSettings();$('#stSound').textContent=settings.sound?'开（点击关闭）':'关（点击开启）';if(settings.sound)sfxTap()};
@@ -961,7 +961,7 @@ PANELS.about=()=>`
 ${head('使用说明')}
 <div class="panel-body">
   <h3>操作</h3>
-  <p>· <b>点击</b>小白虎：开心反应 + 打开工具栏<br>· <b>双击</b>：在窗口里跑来跑去<br>· <b>按住拖拽</b>：移动小白虎的位置<br>· <b>右键</b>：打开工具栏</p>
+  <p>· <b>点击</b>三虎：开心反应 + 打开工具栏<br>· <b>双击</b>：在窗口里跑来跑去<br>· <b>按住拖拽</b>：移动三虎的位置<br>· <b>右键</b>：打开工具栏</p>
   <h3>功能</h3>
   <p>截图/录屏（全屏或窗口）、文件格式转换、ZIP 压缩（可设密码）/解压、定时提醒、待办清单、天气与下雨主动提示。</p>
   <h3>技术说明</h3>
