@@ -25,17 +25,17 @@ pub struct WinInfo {
 }
 
 fn to_win_info(w: &Window) -> Option<WinInfo> {
-    let title = w.title().to_string();
+    let title = w.title().ok()?;
     if title.is_empty() {
         return None;
     }
     Some(WinInfo {
-        id: w.id(),
+        id: w.id().ok()?,
         title,
-        x: w.x(),
-        y: w.y(),
-        width: w.width(),
-        height: w.height(),
+        x: w.x().ok()?,
+        y: w.y().ok()?,
+        width: w.width().ok()?,
+        height: w.height().ok()?,
     })
 }
 
@@ -54,14 +54,18 @@ pub fn cursor_window_info() -> Option<WinInfo> {
     let wins = Window::all().ok()?;
     let mut best: Option<(i32, WinInfo)> = None;
     for w in &wins {
-        let (x, y, ww, hh) = (w.x() as i64, w.y() as i64, w.width() as i64, w.height() as i64);
+        let (x, y, ww, hh) = match (w.x(), w.y(), w.width(), w.height()) {
+            (Ok(x), Ok(y), Ok(ww), Ok(hh)) => (x as i64, y as i64, ww as i64, hh as i64),
+            _ => continue,
+        };
         if ww <= 0 || hh <= 0 {
             continue;
         }
         if mx >= x && mx < x + ww && my >= y && my < y + hh {
             if let Some(info) = to_win_info(w) {
-                if best.as_ref().map(|(z, _)| w.z() > *z).unwrap_or(true) {
-                    best = Some((w.z(), info));
+                let z = w.z().ok()?;
+                if best.as_ref().map(|(bz, _)| z > *bz).unwrap_or(true) {
+                    best = Some((z, info));
                 }
             }
         }
@@ -85,7 +89,10 @@ fn capture_full() -> Result<image::RgbaImage, String> {
 
 fn capture_window(id: u32) -> Result<image::RgbaImage, String> {
     let wins = Window::all().map_err(|e| e.to_string())?;
-    let w = wins.iter().find(|w| w.id() == id).ok_or("找不到该窗口")?;
+    let w = wins
+        .iter()
+        .find(|w| w.id().ok() == Some(id))
+        .ok_or("找不到该窗口")?;
     w.capture_image().map_err(|e| e.to_string())
 }
 
@@ -209,7 +216,7 @@ pub async fn open_file_dialog(
     }
     let (tx, rx) = mpsc::channel::<Option<PathBuf>>();
     dlg.pick_file(move |p| {
-        let _ = tx.send(p.map(|f| f.into_path()));
+        let _ = tx.send(p.and_then(|f| f.into_path().ok()));
     });
     let p = tauri::async_runtime::spawn_blocking(move || {
         rx.recv_timeout(Duration::from_secs(600)).unwrap_or(None)
@@ -234,7 +241,7 @@ pub async fn save_bytes_dialog(
         .set_file_name(default_name)
         .add_filter(filter_name, &[filter_ext]);
     dlg.save_file(move |p| {
-        let _ = tx.send(p.map(|f| f.into_path()));
+        let _ = tx.send(p.and_then(|f| f.into_path().ok()));
     });
     let p = tauri::async_runtime::spawn_blocking(move || {
         rx.recv_timeout(Duration::from_secs(600)).unwrap_or(None)
