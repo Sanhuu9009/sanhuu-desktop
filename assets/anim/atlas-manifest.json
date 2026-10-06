@@ -1,204 +1,35 @@
 {
-  "meta": {
-    "character": "三虎 Sanhuu",
-    "pixel_style": "16-bit pixel",
-    "frame_size": [
-      160,
-      160
-    ],
-    "background": "transparent",
-    "copyright": "美术素材版权 © 三虎 Sanhuu，保留所有权利。未经许可，禁止商用、二次修改、转载传播。"
+  "idle": {
+    "frames": 16,
+    "frame_ms": 125,
+    "mode": "loop",
+    "loop_pct": 5.7,
+    "motion_pct": 7.5
   },
-  "states": {
-    "idle": {
-      "frame_count": 6,
-      "frames": [
-        "idle/01.png",
-        "idle/02.png",
-        "idle/03.png",
-        "idle/04.png",
-        "idle/05.png",
-        "idle/06.png"
-      ],
-      "fps": 8,
-      "pixel_sizes": [
-        [
-          59,
-          142
-        ],
-        [
-          73,
-          142
-        ],
-        [
-          59,
-          142
-        ],
-        [
-          72,
-          142
-        ],
-        [
-          66,
-          142
-        ],
-        [
-          64,
-          142
-        ]
-      ]
-    },
-    "walk": {
-      "frame_count": 6,
-      "frames": [
-        "walk/01.png",
-        "walk/02.png",
-        "walk/03.png",
-        "walk/04.png",
-        "walk/05.png",
-        "walk/06.png"
-      ],
-      "fps": 8,
-      "pixel_sizes": [
-        [
-          121,
-          142
-        ],
-        [
-          75,
-          142
-        ],
-        [
-          106,
-          142
-        ],
-        [
-          69,
-          142
-        ],
-        [
-          102,
-          142
-        ],
-        [
-          65,
-          142
-        ]
-      ]
-    },
-    "happy": {
-      "frame_count": 6,
-      "frames": [
-        "happy/01.png",
-        "happy/02.png",
-        "happy/03.png",
-        "happy/04.png",
-        "happy/05.png",
-        "happy/06.png"
-      ],
-      "fps": 8,
-      "pixel_sizes": [
-        [
-          91,
-          142
-        ],
-        [
-          91,
-          142
-        ],
-        [
-          83,
-          142
-        ],
-        [
-          117,
-          142
-        ],
-        [
-          73,
-          142
-        ],
-        [
-          69,
-          142
-        ]
-      ]
-    },
-    "rain": {
-      "frame_count": 6,
-      "frames": [
-        "rain/01.png",
-        "rain/02.png",
-        "rain/03.png",
-        "rain/04.png",
-        "rain/05.png",
-        "rain/06.png"
-      ],
-      "fps": 8,
-      "pixel_sizes": [
-        [
-          95,
-          142
-        ],
-        [
-          88,
-          142
-        ],
-        [
-          94,
-          142
-        ],
-        [
-          110,
-          142
-        ],
-        [
-          98,
-          142
-        ],
-        [
-          91,
-          142
-        ]
-      ]
-    },
-    "jump": {
-      "frame_count": 6,
-      "frames": [
-        "jump/01.png",
-        "jump/02.png",
-        "jump/03.png",
-        "jump/04.png",
-        "jump/05.png",
-        "jump/06.png"
-      ],
-      "fps": 8,
-      "pixel_sizes": [
-        [
-          128,
-          142
-        ],
-        [
-          100,
-          142
-        ],
-        [
-          106,
-          142
-        ],
-        [
-          89,
-          142
-        ],
-        [
-          104,
-          142
-        ],
-        [
-          66,
-          142
-        ]
-      ]
-    }
+  "walk": {
+    "frames": 16,
+    "frame_ms": 125,
+    "mode": "loop",
+    "loop_pct": 20.2,
+    "motion_pct": 15.7
+  },
+  "happy": {
+    "frames": 16,
+    "frame_ms": 125,
+    "mode": "loop",
+    "loop_pct": 1.1,
+    "motion_pct": 20.6
+  },
+  "rain": {
+    "frames": 16,
+    "frame_ms": 125,
+    "mode": "loop",
+    "loop_pct": 6.4,
+    "motion_pct": 4.7
+  },
+  "jump": {
+    "frames": 12,
+    "frame_ms": 100,
+    "mode": "once"
   }
 }
