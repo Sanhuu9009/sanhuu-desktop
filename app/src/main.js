@@ -71,7 +71,7 @@ let W=0,H=0,DPR=1;
 function resize(){DPR=window.devicePixelRatio||1;W=window.innerWidth;H=window.innerHeight;canvas.width=Math.round(W*DPR);canvas.height=Math.round(H*DPR);canvas.style.width=W+'px';canvas.style.height=H+'px';ctx.setTransform(DPR,0,0,DPR,0,0)}
 window.addEventListener('resize',resize);
 
-const pet={x:0,groundY:0,vx:0,state:'idle',frame:0,ft:0,bob:0,lean:0,facing:1,hop:0,drag:false,dragDX:0,t:0,sleepT:0,lastTap:0,rainT:0,jumpT:0};
+const pet={x:0,groundY:0,vx:0,state:'idle',frame:0,ft:0,dir:1,bob:0,lean:0,look:0,doze:0,facing:1,hop:0,drag:false,dragDX:0,t:0,sleepT:0,lastTap:0,rainT:0,jumpT:0};
 let mouse={x:0,y:0};
 let bubbleTimer=null,bubbleQ=[];
 function bubble(text,ms=3200){
@@ -101,14 +101,24 @@ function openDock(){
 }
 function closeDock(){$('#dock').classList.remove('show')}
 
-/* 待机帧切换（atlas 完整动画：按状态在帧序列中循环） */
+/* 待机帧切换（atlas 完整动画：往返播放消除循环跳变；jump 一次性播完停留） */
 const FRAME_MS={idle:140,walk:110,happy:120,rain:160,jump:100};
+const PING_PONG={idle:1,walk:1,happy:1,rain:1};
 function tickFrame(dt){
   pet.ft+=dt;
   const ms=FRAME_MS[pet.state]||140;
   const n=imgs[pet.state]?imgs[pet.state].length:1;
   const interval=ms/1000/settings.speed;
-  if(pet.ft>=interval){pet.ft=0;pet.frame=(pet.frame+1)%n}
+  if(pet.ft>=interval){
+    pet.ft=0;
+    if(PING_PONG[pet.state]){
+      pet.frame+=pet.dir;
+      if(pet.frame>=n-1){pet.frame=n-1;pet.dir=-1}
+      else if(pet.frame<=0){pet.frame=0;pet.dir=1}
+    }else if(pet.state==='jump'){
+      if(pet.frame<n-1)pet.frame++;
+    }else pet.frame=(pet.frame+1)%n;
+  }
 }
 
 /* 行走 */
@@ -133,10 +143,11 @@ function walkUpdate(dt){
 function petUpdate(dt){
   pet.t+=dt*settings.speed;
   if(pet.state==='idle'){
-    pet.bob=Math.sin(pet.t*2.2)*2.5*settings.speed;
+    pet.bob=Math.sin(pet.t*2.2)*2.5*settings.speed*(1-pet.doze*0.6);
     tickFrame(dt);
     pet.sleepT+=dt;
-    if(pet.sleepT>75&&Math.random()<0.003){bubble('zZ…',1500)}
+    if(pet.sleepT>75){pet.doze=Math.min(1,(pet.sleepT-75)/12);if(Math.random()<0.006)bubble('zZ…',1500)}
+    else pet.doze=Math.max(0,pet.doze-dt*0.4);
   }else if(pet.state==='happy'){
     pet.hop=Math.max(0,pet.hop-dt*2.4);
     tickFrame(dt);
@@ -147,14 +158,18 @@ function petUpdate(dt){
     tickFrame(dt);
     pet.jumpT-=dt;
     pet.bob=Math.sin(pet.t*7)*1.5;
-    if(pet.jumpT<=0)pet.state='idle';
+    if(pet.jumpT<=0){pet.state='idle';pet.frame=0;pet.ft=0}
   }else if(pet.state==='rain'){
     tickFrame(dt);
     pet.rainT-=dt;
     pet.bob=Math.sin(pet.t*9)*1.2;
     if(pet.rainT<=0)pet.state='idle';
   }
-  pet.lean=Math.max(-0.10,Math.min(0.10,(mouse.x-pet.x)/W*0.5));
+  pet.sleepT=Math.max(0,pet.sleepT);
+  const leanT=Math.max(-0.14,Math.min(0.14,(mouse.x-pet.x)/W*0.5));
+  pet.lean+=(leanT-pet.lean)*Math.min(1,dt*5);
+  const lookT=Math.max(-0.05,Math.min(0.08,(pet.groundY-mouse.y)/H*0.6));
+  pet.look+=(lookT-pet.look)*Math.min(1,dt*5);
 }
 
 const SPRITE_W=160,SPRITE_H=160;
@@ -166,12 +181,19 @@ function render(){
   const img=frames[pet.frame%frames.length]||frames[0];
   const scale=(pet.state==='rain'?settings.size*0.92:settings.size)/SPRITE_H;
   const g=pet.groundY;
-  let bx=pet.x,by=g+pet.bob*scale*0.5+(pet.state==='happy'?pet.hop*18:0);
+  let jumpY=0,sx=1,sy=1;
+  if(pet.state==='jump'){
+    const p=Math.max(0,1-pet.jumpT/0.9);
+    jumpY=-Math.sin(Math.PI*Math.min(1,p))*44;
+    if(p>0.88){const s=Math.sin(Math.PI*(p-0.88)/0.12)*0.10;sx=1+s;sy=1-s}
+  }
+  let bx=pet.x,by=g+pet.bob*scale*0.5+jumpY*scale+(pet.state==='happy'?pet.hop*18:0)+pet.look*scale*7;
   const rot=pet.state==='happy'?Math.sin(pet.t*6)*0.02:0;
   ctx.save();
+  ctx.globalAlpha=1-pet.doze*0.15;
   ctx.translate(bx,by);
-  ctx.scale(pet.facing*scale,scale);
-  ctx.rotate(rot+pet.lean*0.6);
+  ctx.scale(pet.facing*scale*sx,scale*sy);
+  ctx.rotate(rot+pet.lean*0.7);
   ctx.imageSmoothingEnabled=false;
   ctx.drawImage(img,-SPRITE_W/2,-SPRITE_H*0.9,SPRITE_W,SPRITE_H);
   ctx.restore();
@@ -233,6 +255,7 @@ canvas.addEventListener('pointerdown',e=>{
 });
 canvas.addEventListener('pointermove',e=>{
   mouse.x=e.clientX;mouse.y=e.clientY;
+  if(pet.sleepT>75){pet.sleepT=0;pet.doze=0}
   if(!dragOn||!downPos)return;
   const dx=e.clientX-downPos.x,dy=e.clientY-downPos.y;
   if(Math.abs(dx)+Math.abs(dy)>6)moved=true;
@@ -246,7 +269,7 @@ canvas.addEventListener('pointermove',e=>{
 function onUp(e){
   if(!dragOn)return;
   dragOn=false;canvas.classList.remove('grabbing');
-  if(moved&&movedJiggle){movedJiggle=false;pet.state='jump';pet.jumpT=0.9;pet.frame=0;pet.ft=0;downPos=null;return}
+  if(moved&&movedJiggle){movedJiggle=false;pet.state='jump';pet.jumpT=0.9;pet.frame=0;pet.ft=0;pet.dir=1;downPos=null;return}
   if(!moved&&downPos){
     const now=Date.now();
     if(now-pet.lastTap<320){startWalk();pet.lastTap=0;return}
