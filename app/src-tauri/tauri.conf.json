@@ -65,9 +65,11 @@
     "macOS": {
       "minimumSystemVersion": "10.15"
     },
-    "nsis": {
-      "installMode": "currentUser",
-      "languages": ["SimpChinese", "English"]
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "languages": ["SimpChinese", "English"]
+      }
     }
   }
 }
