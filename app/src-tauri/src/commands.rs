@@ -51,6 +51,7 @@ pub fn cursor_window_info() -> Option<WinInfo> {
     use device_query::{DeviceQuery, DeviceState};
     let dq = DeviceState::new();
     let (mx, my) = dq.get_mouse().coords;
+    let (mx, my) = (i64::from(mx), i64::from(my));
     let wins = Window::all().ok()?;
     let mut best: Option<(i32, WinInfo)> = None;
     for w in &wins {

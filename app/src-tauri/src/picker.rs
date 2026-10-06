@@ -14,7 +14,7 @@ pub struct PickerState {
 }
 
 /// 每 250ms 查询鼠标所在窗口，把矩形与标题发到前端（main 与 overlay 窗口）
-fn picker_loop(app: AppHandle, stop: Arc<AtomicBool>) {
+fn picker_loop(app: &AppHandle, stop: Arc<AtomicBool>) {
     while !stop.load(Ordering::Relaxed) {
         let info = crate::commands::cursor_window_info().map(|w| {
             serde_json::json!({
@@ -44,7 +44,7 @@ pub fn start(app: &AppHandle) {
     let app2 = app.clone();
     let stop = Arc::clone(&state.stop);
     std::thread::spawn(move || {
-        picker_loop(app2, stop);
+        picker_loop(&app2, stop);
         if let Some(s) = app2.try_state::<PickerState>() {
             *s.running.lock().unwrap() = false;
         }
