@@ -5,3 +5,4 @@ _shots/
 app/src/_shots/
 *.log
 .DS_Store
+_work/
