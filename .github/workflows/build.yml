@@ -1,0 +1,63 @@
+name: build-sanhuu-pet
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - '.github/workflows/build.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            artifact: sanhuu-pet-windows
+          - os: macos-latest
+            artifact: sanhuu-pet-macos
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: app/src-tauri
+
+      - name: Install Tauri CLI
+        working-directory: app
+        run: npm install
+
+      - name: Build and upload artifacts
+        uses: tauri-apps/tauri-action@v0
+        with:
+          projectPath: app
+          tagName: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
+          releaseName: Sanhuu Pet ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'dev build' }}
+          releaseDraft: true
+          releaseBody: |
+            ## 三虎桌宠 Sanhuu Pet
+
+            以「三虎 Sanhuu」为主角的像素风桌面宠物。
+
+            - 点击三虎：开心反应 + 工具栏
+            - 截图 / 录屏（全屏或窗口，鼠标移到窗口出现红色选框）
+            - 文件格式转换（图片/文本/视频转 GIF）
+            - ZIP 压缩（可设密码）/ 解压（含 7z / RAR）
+            - 定时提醒、自动关机 / 睡眠 / 重启
+            - 待办清单（像素风 UI）
+            - 天气与下雨主动预警动画
+            - 开机自启、托盘常驻、窗口置顶
+
+            美术素材版权 © 三虎 Sanhuu，保留所有权利。未经许可，禁止商用、二次修改、转载传播。
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
