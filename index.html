@@ -81,7 +81,7 @@ h1 .t{color:var(--amber)}
 /* ---------- 精灵帧 ---------- */
 .spr{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
 .spr .f{background:var(--bg1);border:3px solid var(--line);box-shadow:5px 5px 0 rgba(0,0,0,.5);padding:12px;text-align:center}
-.spr .f img{width:110px;height:110px;image-rendering:pixelated;object-fit:contain}
+.spr .f img{width:120px;height:120px;image-rendering:pixelated;object-fit:contain;background:#f5f2ec;border-radius:4px}
 .spr .f i{display:block;font-style:normal;font-size:11px;color:var(--dim);margin-top:8px;letter-spacing:1px}
 
 /* ---------- 声明 ---------- */
@@ -220,14 +220,14 @@ h1 .t{color:var(--amber)}
 
 <section class="sec">
   <div class="wrap">
-    <h2>像素精灵帧</h2>
-    <p class="lead">五帧动画 · 160×160 透明 PNG，可单独用于其他桌宠软件</p>
+    <h2>完整逐帧动画</h2>
+    <p class="lead">每状态 6 帧完整逐帧动画（参照经典像素宠物实现方式），不是单帧位移</p>
     <div class="spr">
-      <div class="f"><img src="assets/sprite-idle-01-final.png" alt="待机"><i>待机</i></div>
-      <div class="f"><img src="assets/sprite-idle-02-final.png" alt="开心待机"><i>开心待机</i></div>
-      <div class="f"><img src="assets/sprite-walk-01-final.png" alt="行走"><i>行走</i></div>
-      <div class="f"><img src="assets/sprite-happy-01-final.png" alt="蹲坐挥手"><i>蹲坐挥手</i></div>
-      <div class="f"><img src="assets/sprite-rain-01-final.png" alt="下雨反应"><i>下雨抱膝</i></div>
+      <div class="f"><img src="assets/anim/previews/idle.gif" alt="待机"><i>待机 · 呼吸眨眼尾巴</i></div>
+      <div class="f"><img src="assets/anim/previews/walk.gif" alt="行走"><i>行走 · 左右迈步</i></div>
+      <div class="f"><img src="assets/anim/previews/happy.gif" alt="开心"><i>开心 · 挥手跳起</i></div>
+      <div class="f"><img src="assets/anim/previews/rain.gif" alt="下雨"><i>下雨 · 抱膝发抖</i></div>
+      <div class="f"><img src="assets/anim/previews/jump.gif" alt="跳跃"><i>跳跃 · 蓄力腾空</i></div>
     </div>
   </div>
 </section>
