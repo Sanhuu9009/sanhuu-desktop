@@ -42,7 +42,7 @@ jobs:
           projectPath: app
           tagName: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
           releaseName: Sanhuu Pet ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'dev build' }}
-          releaseDraft: true
+          releaseDraft: false
           releaseBody: |
             ## 三虎桌宠 Sanhuu Pet
 
