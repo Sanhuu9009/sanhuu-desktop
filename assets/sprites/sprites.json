@@ -1,0 +1,187 @@
+{
+ "size": 96,
+ "ground": 86,
+ "cx": 48,
+ "grab": [
+  48,
+  40
+ ],
+ "anims": {
+  "idle_00": {
+   "file": "idle_00.png",
+   "frames": 24,
+   "fps": 8,
+   "loop": true,
+   "cols": 10
+  },
+  "idle_01": {
+   "file": "idle_01.png",
+   "frames": 24,
+   "fps": 8,
+   "loop": true,
+   "cols": 10
+  },
+  "idle_02": {
+   "file": "idle_02.png",
+   "frames": 24,
+   "fps": 8,
+   "loop": true,
+   "cols": 10
+  },
+  "idle_10": {
+   "file": "idle_10.png",
+   "frames": 24,
+   "fps": 8,
+   "loop": true,
+   "cols": 10
+  },
+  "idle_11": {
+   "file": "idle_11.png",
+   "frames": 24,
+   "fps": 8,
+   "loop": true,
+   "cols": 10
+  },
+  "idle_12": {
+   "file": "idle_12.png",
+   "frames": 24,
+   "fps": 8,
+   "loop": true,
+   "cols": 10
+  },
+  "idle_20": {
+   "file": "idle_20.png",
+   "frames": 24,
+   "fps": 8,
+   "loop": true,
+   "cols": 10
+  },
+  "idle_21": {
+   "file": "idle_21.png",
+   "frames": 24,
+   "fps": 8,
+   "loop": true,
+   "cols": 10
+  },
+  "idle_22": {
+   "file": "idle_22.png",
+   "frames": 24,
+   "fps": 8,
+   "loop": true,
+   "cols": 10
+  },
+  "wave": {
+   "file": "wave.png",
+   "frames": 16,
+   "fps": 10,
+   "loop": false,
+   "cols": 10
+  },
+  "happy": {
+   "file": "happy.png",
+   "frames": 16,
+   "fps": 12,
+   "loop": false,
+   "cols": 10
+  },
+  "jump": {
+   "file": "jump.png",
+   "frames": 12,
+   "fps": 12,
+   "loop": false,
+   "cols": 10
+  },
+  "land": {
+   "file": "land.png",
+   "frames": 6,
+   "fps": 12,
+   "loop": false,
+   "cols": 6
+  },
+  "drag": {
+   "file": "drag.png",
+   "frames": 8,
+   "fps": 8,
+   "loop": true,
+   "cols": 8
+  },
+  "drag_fast": {
+   "file": "drag_fast.png",
+   "frames": 8,
+   "fps": 12,
+   "loop": true,
+   "cols": 8
+  },
+  "sleep": {
+   "file": "sleep.png",
+   "frames": 24,
+   "fps": 6,
+   "loop": true,
+   "cols": 10
+  },
+  "work": {
+   "file": "work.png",
+   "frames": 16,
+   "fps": 8,
+   "loop": true,
+   "cols": 10
+  },
+  "walk_l": {
+   "file": "walk_l.png",
+   "frames": 8,
+   "fps": 10,
+   "loop": true,
+   "cols": 8
+  },
+  "walk_r": {
+   "file": "walk_r.png",
+   "frames": 8,
+   "fps": 10,
+   "loop": true,
+   "cols": 8
+  },
+  "rain": {
+   "file": "rain.png",
+   "frames": 80,
+   "fps": 8,
+   "loop": false,
+   "cols": 10
+  },
+  "sunny": {
+   "file": "sunny.png",
+   "frames": 80,
+   "fps": 8,
+   "loop": false,
+   "cols": 10
+  },
+  "cloudy": {
+   "file": "cloudy.png",
+   "frames": 80,
+   "fps": 8,
+   "loop": false,
+   "cols": 10
+  },
+  "snow": {
+   "file": "snow.png",
+   "frames": 80,
+   "fps": 8,
+   "loop": false,
+   "cols": 10
+  },
+  "thunder": {
+   "file": "thunder.png",
+   "frames": 80,
+   "fps": 8,
+   "loop": false,
+   "cols": 10
+  },
+  "wind": {
+   "file": "wind.png",
+   "frames": 80,
+   "fps": 8,
+   "loop": false,
+   "cols": 10
+  }
+ },
+ "copyright": "美术素材版权 © 三虎 Sanhuu,保留所有权利。未经许可,禁止商用、二次修改、转载传播。"
+}

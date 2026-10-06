@@ -1,0 +1,31 @@
+# 推送 tag(v*)或手动触发时,自动构建 Windows 安装包与 macOS DMG
+name: build-installers
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Install Inno Setup
+        run: choco install innosetup --no-progress -y
+      - name: Build
+        shell: pwsh
+        run: ./packaging/windows/build_windows.ps1
+      - uses: actions/upload-artifact@v4
+        with: { name: Sanhuu-Windows, path: dist/Sanhuu-Setup-*.exe }
+  macos:
+    runs-on: macos-latest        # Apple Silicon;需要 Intel 版请在 Intel Mac 上运行同一脚本
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: brew install sevenzip
+      - name: Build
+        run: ./packaging/macos/build_macos.sh
+      - uses: actions/upload-artifact@v4
+        with: { name: Sanhuu-macOS, path: dist/Sanhuu-*.dmg }
