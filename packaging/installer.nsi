@@ -3,7 +3,7 @@
 !include "FileFunc.nsh"
 
 Name "三虎桌宠 Sanhuu Pet"
-OutFile "Sanhuu.Pet-${VERSION}-setup.exe"
+OutFile "Sanhuu.Pet-__VERSION__-setup.exe"
 InstallDir "$LOCALAPPDATA\SanhuuPet"
 RequestExecutionLevel user
 
@@ -19,7 +19,7 @@ RequestExecutionLevel user
 
 Section "Install"
   SetOutPath "$INSTDIR"
-  File "dist\SanhuuPet.exe"
+  File "..\dist\SanhuuPet.exe"
 
   ; 桌面快捷方式
   CreateShortCut "$DESKTOP\三虎桌宠.lnk" "$INSTDIR\${APP_EXE}"

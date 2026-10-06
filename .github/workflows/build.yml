@@ -39,12 +39,16 @@ jobs:
         if: runner.os == 'Windows'
         shell: bash
         run: |
-          VERSION=${GITHUB_REF_NAME#v}
-          mkdir -p nsis
-          cp packaging/installer.nsi nsis/installer.nsi
-          sed -i "s/\${VERSION}/$VERSION/g" nsis/installer.nsi
+          python - <<'PY'
+          import os
+          ver = os.environ["GITHUB_REF_NAME"].lstrip("v")
+          p = "packaging/installer.nsi"
+          s = open(p, encoding="utf-8").read().replace("__VERSION__", ver)
+          open(p, "w", encoding="utf-8").write(s)
+          PY
           choco install nsis --yes --no-progress >/dev/null 2>&1 || true
-          "/c/Program Files (x86)/NSIS/makensis.exe" nsis/installer.nsi
+          "/c/Program Files (x86)/NSIS/makensis.exe" packaging/installer.nsi
+          mv packaging/Sanhuu.Pet-*-setup.exe .
 
       # ---------- macOS ----------
       - name: Build (macOS)
