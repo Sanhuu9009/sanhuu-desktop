@@ -173,7 +173,7 @@ pub async fn record_gif(
                     .encode_frame(fr)
                     .map_err(|err| err.to_string())?;
             }
-            captured = i + 1;
+            captured = i as usize + 1;
         }
         if captured == 0 {
             return Err("未捕获到任何帧".into());
