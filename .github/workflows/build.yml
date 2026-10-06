@@ -3,6 +3,7 @@ name: build-sanhuu-pet
 on:
   push:
     branches: [main]
+    tags: ['v*']
     paths:
       - 'app/**'
       - '.github/workflows/build.yml'
