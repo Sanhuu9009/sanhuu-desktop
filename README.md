@@ -8,8 +8,8 @@
 
 桌面应用安装包由 GitHub Actions 自动构建，见仓库 **Releases**（推送 `v*` 标签即可发布）：
 
-- **Windows**：`Sanhuu Pet_1.0.0_x64-setup.exe`（NSIS 一键安装，自动创建桌面 + 开始菜单快捷方式；安装时可选开机自启）
-- **macOS**：`Sanhuu Pet_1.0.0_aarch64.dmg`（拖入 Applications；开机自启与置顶在应用内「设置」开启）
+- **Windows**：`Sanhuu.Pet_1.0.0_x64-setup.exe`（NSIS 一键安装，自动创建桌面 + 开始菜单快捷方式；安装时可选开机自启）
+- **macOS**：`Sanhuu.Pet_1.0.0_aarch64.dmg`（拖入 Applications；开机自启与置顶在应用内「设置」开启）
 
 安装后：
 
